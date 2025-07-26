@@ -2,7 +2,6 @@ package com.retrythesis.tests;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import com.retrythesis.retry.RetryAnalyzer;
 
 public class FlakyTest {
 
