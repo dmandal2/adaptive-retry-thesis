@@ -1,4 +1,4 @@
-package com.retrythesis.retry;
+package com.retrythesis.tests;
 
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
