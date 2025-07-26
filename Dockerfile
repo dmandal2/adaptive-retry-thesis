@@ -1,14 +1,14 @@
-# Use an official Maven image with JDK 17
-FROM maven:3.9.4-eclipse-temurin-17
+# Use official Maven image with Java 11
+FROM maven:3.8.6-openjdk-11
 
-# Set working directory inside container
-WORKDIR /app
+# Set working directory
+WORKDIR /usr/src/app
 
-# Copy everything from your local project to the container
+# Copy the whole project into the container
 COPY . .
 
-# Build the Maven project (downloads dependencies and compiles)
+# Build the project
 RUN mvn clean install
 
-# Run TestNG test suite
+# Run tests
 CMD ["mvn", "test"]
