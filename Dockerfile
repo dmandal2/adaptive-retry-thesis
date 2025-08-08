@@ -1,14 +1,14 @@
-# Use official Maven image with Java 11
+# Use Maven with JDK 11
 FROM maven:3.8.6-openjdk-11
 
-# Set working directory
+# Create app directory
 WORKDIR /usr/src/app
 
-# Copy the whole project into the container
+# Copy the Maven project files
 COPY . .
 
-# Build the project
-RUN mvn clean install
+# Install dependencies and compile code (skip tests here)
+RUN mvn clean install -DskipTests
 
-# Run tests
+# Run tests at runtime (allows us to see retry logic)
 CMD ["mvn", "test"]
