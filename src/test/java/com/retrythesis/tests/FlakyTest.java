@@ -11,6 +11,9 @@ public class FlakyTest {
 
     @Test(retryAnalyzer = RetryAnalyzer.class)
     public void testRandomFlaky() {
+    	System.out.println(System.getProperty("log4j.configuration"));
+    	
+    	
         double randomValue = Math.random(); // generates value between 0.0 and 1.0
 
         // Log instead of just printing
