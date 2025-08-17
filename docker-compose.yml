@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    container_name: adaptive-retry-thesis-app
+    volumes:
+      - ./logs:/usr/src/app/logs
+

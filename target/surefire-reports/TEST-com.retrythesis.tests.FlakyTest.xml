@@ -1,62 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.retrythesis.tests.FlakyTest" time="0.739" tests="0" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.retrythesis.tests.FlakyTest" time="0.8" tests="2" errors="0" skipped="1" failures="0">
   <properties>
-    <property name="java.specification.version" value="21"/>
-    <property name="sun.cpu.isalist" value="amd64"/>
-    <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.class.path" value="C:\Users\Admin\eclipse-workspace\flaky-retry\target\test-classes;C:\Users\Admin\eclipse-workspace\flaky-retry\target\classes;C:\Users\Admin\.m2\repository\org\testng\testng\7.9.0\testng-7.9.0.jar;C:\Users\Admin\.m2\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;C:\Users\Admin\.m2\repository\com\beust\jcommander\1.82\jcommander-1.82.jar;C:\Users\Admin\.m2\repository\org\webjars\jquery\3.7.1\jquery-3.7.1.jar;"/>
-    <property name="java.vm.vendor" value="Amazon.com Inc."/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.specification.version" value="11"/>
+    <property name="sun.cpu.isalist" value=""/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/usr/src/app/target/test-classes:/usr/src/app/target/classes:/root/.m2/repository/org/testng/testng/7.8.0/testng-7.8.0.jar:/root/.m2/repository/com/beust/jcommander/1.82/jcommander-1.82.jar:/root/.m2/repository/org/webjars/jquery/3.6.1/jquery-3.6.1.jar:/root/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/root/.m2/repository/org/slf4j/slf4j-reload4j/1.7.36/slf4j-reload4j-1.7.36.jar:/root/.m2/repository/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar:/root/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar:"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
-    <property name="user.variant" value=""/>
-    <property name="java.vendor.url" value="https://aws.amazon.com/corretto/"/>
-    <property name="user.timezone" value="Asia/Calcutta"/>
-    <property name="os.name" value="Windows 10"/>
-    <property name="java.vm.specification.version" value="21"/>
+    <property name="java.vendor.url" value="https://openjdk.java.net/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="java.vm.specification.version" value="11"/>
+    <property name="os.name" value="Linux"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
-    <property name="user.country" value="IN"/>
-    <property name="sun.boot.library.path" value="C:\Program Files\Amazon Corretto\jdk21.0.6_7\bin"/>
-    <property name="sun.java.command" value="C:\Users\Admin\AppData\Local\Temp\surefire5881469652450463009\surefirebooter-20250719182040695_3.jar C:\Users\Admin\AppData\Local\Temp\surefire5881469652450463009 2025-07-19T18-20-35_833-jvmRun1 surefire-20250719182040695_1tmp surefire_0-20250719182040695_2tmp"/>
+    <property name="sun.boot.library.path" value="/usr/local/openjdk-11/lib"/>
+    <property name="sun.java.command" value="/usr/src/app/target/surefire/surefirebooter-20250817130056644_3.jar /usr/src/app/target/surefire 2025-08-17T13-00-55_178-jvmRun1 surefire-20250817130056644_1tmp surefire_0-20250817130056644_2tmp"/>
     <property name="jdk.debug" value="release"/>
-    <property name="surefire.test.class.path" value="C:\Users\Admin\eclipse-workspace\flaky-retry\target\test-classes;C:\Users\Admin\eclipse-workspace\flaky-retry\target\classes;C:\Users\Admin\.m2\repository\org\testng\testng\7.9.0\testng-7.9.0.jar;C:\Users\Admin\.m2\repository\org\slf4j\slf4j-api\1.7.36\slf4j-api-1.7.36.jar;C:\Users\Admin\.m2\repository\com\beust\jcommander\1.82\jcommander-1.82.jar;C:\Users\Admin\.m2\repository\org\webjars\jquery\3.7.1\jquery-3.7.1.jar;"/>
+    <property name="surefire.test.class.path" value="/usr/src/app/target/test-classes:/usr/src/app/target/classes:/root/.m2/repository/org/testng/testng/7.8.0/testng-7.8.0.jar:/root/.m2/repository/com/beust/jcommander/1.82/jcommander-1.82.jar:/root/.m2/repository/org/webjars/jquery/3.6.1/jquery-3.6.1.jar:/root/.m2/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/root/.m2/repository/org/slf4j/slf4j-reload4j/1.7.36/slf4j-reload4j-1.7.36.jar:/root/.m2/repository/ch/qos/reload4j/reload4j/1.2.19/reload4j-1.2.19.jar:/root/.m2/repository/log4j/log4j/1.2.17/log4j-1.2.17.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
-    <property name="user.home" value="C:\Users\Admin"/>
+    <property name="user.home" value="/root"/>
     <property name="user.language" value="en"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
-    <property name="java.version.date" value="2025-01-21"/>
-    <property name="java.home" value="C:\Program Files\Amazon Corretto\jdk21.0.6_7"/>
-    <property name="file.separator" value="\"/>
-    <property name="basedir" value="C:\Users\Admin\eclipse-workspace\flaky-retry"/>
+    <property name="java.version.date" value="2022-07-19"/>
+    <property name="java.home" value="/usr/local/openjdk-11"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/usr/src/app"/>
     <property name="java.vm.compressedOopsMode" value="32-bit"/>
     <property name="line.separator" value="&#10;"/>
-    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Admin\AppData\Local\Temp\surefire5881469652450463009\surefirebooter-20250719182040695_3.jar"/>
-    <property name="user.script" value=""/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="surefire.real.class.path" value="/usr/src/app/target/surefire/surefirebooter-20250817130056644_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="java.runtime.version" value="21.0.6+7-LTS"/>
-    <property name="user.name" value="Admin"/>
-    <property name="stdout.encoding" value="Cp1252"/>
-    <property name="path.separator" value=";"/>
-    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.version" value="11.0.16+8"/>
+    <property name="user.name" value="root"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.8.0-1031-aws"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
-    <property name="java.vendor.version" value="Corretto-21.0.6.7.1"/>
-    <property name="localRepository" value="C:\Users\Admin\.m2\repository"/>
-    <property name="java.vendor.url.bug" value="https://github.com/corretto/corretto-21/issues/"/>
-    <property name="java.io.tmpdir" value="C:\Users\Admin\AppData\Local\Temp\"/>
-    <property name="java.version" value="21.0.6"/>
-    <property name="user.dir" value="C:\Users\Admin\eclipse-workspace\flaky-retry"/>
+    <property name="java.vendor.version" value="18.9"/>
+    <property name="localRepository" value="/root/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="11.0.16"/>
+    <property name="user.dir" value="/usr/src/app"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="sun.os.patch.level" value=""/>
-    <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Amazon Corretto\jdk21.0.6_7\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Users\Admin\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Admin\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Windows\System32\OpenSSH;C:\Program Files\PuTTY;C:\ProgramData\chocolatey\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\Amazon\AWSCLIV2;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Git\cmd;C:\Program Files\Docker\Docker\resources\bin;C:\Selenium_Drivers\apache-maven-3.9.9-bin\apache-maven-3.9.9\bin;C:\Program Files\Amazon Corretto\jdk21.0.6_7\bin;C:\Users\Admin\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl;."/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
-    <property name="stderr.encoding" value="Cp1252"/>
-    <property name="java.vendor" value="Amazon.com Inc."/>
-    <property name="java.vm.version" value="21.0.6+7-LTS"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="11.0.16+8"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
-    <property name="java.class.version" value="65.0"/>
+    <property name="java.class.version" value="55.0"/>
   </properties>
+  <testcase name="testRandomFlaky" classname="com.retrythesis.tests.FlakyTest" time="0">
+    <skipped message="Flaky test failed: value &lt;= 0.5 expected [true] but found [false]"/>
+    <system-out><![CDATA[null
+13:00:57 INFO  [com.retrythesis.tests.FlakyTest] - Generated value: 0.06681106525279423
+📁 'logs' directory already exists.
+13:00:57 INFO  [com.retrythesis.tests.RetryAnalyzer] - Retrying test 'testRandomFlaky' | Attempt: 1 | Time: 1755435657517
+]]></system-out>
+  </testcase>
+  <testcase name="testRandomFlaky" classname="com.retrythesis.tests.FlakyTest" time="0.006">
+    <system-out><![CDATA[null
+13:00:57 INFO  [com.retrythesis.tests.FlakyTest] - Generated value: 0.829346659732944
+]]></system-out>
+  </testcase>
 </testsuite>
