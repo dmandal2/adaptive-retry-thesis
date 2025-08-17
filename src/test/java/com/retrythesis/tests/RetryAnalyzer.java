@@ -30,14 +30,31 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 
 	@Override
 	public boolean retry(ITestResult result) {
+		long duration = System.currentTimeMillis() - result.getStartMillis();
+
 		if (retryCount < maxRetryCount) {
-			logger.info("Retrying test '{}' | Attempt: {} | Time: {}", result.getName(), retryCount + 1,
-					System.currentTimeMillis());
+			logger.info("Retrying test '{}' | Status: {} | Attempt: {}/{} | Duration: {} ms", result.getName(),
+					getStatusString(result.getStatus()), retryCount + 1, maxRetryCount, duration);
 			retryCount++;
 			return true;
 		} else {
-			logger.info("Test '{}' failed after {} attempts.", result.getName(), retryCount);
+			logger.info("Test '{}' finished | Final Status: {} | Total Duration: {} ms (after {} attempts)",
+					result.getName(), getStatusString(result.getStatus()), duration, retryCount);
+			return false;
 		}
-		return false;
+	}
+
+	private String getStatusString(int status) {
+		switch (status) {
+		case ITestResult.SUCCESS:
+			return "PASS";
+		case ITestResult.FAILURE:
+			return "FAIL";
+		case ITestResult.SKIP:
+			return "SKIP";
+		default:
+			return "UNKNOWN";
+		}
 	}
 }
+
