@@ -1,24 +1,24 @@
 package com.retrythesis.tests;
 
-import org.testng.Assert;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
-import org.apache.log4j.Logger;  // Import log4j
+import org.apache.log4j.Logger;
 
 public class FlakyTest {
-
-    // Create a logger instance
     static Logger logger = Logger.getLogger(FlakyTest.class);
 
     @Test(retryAnalyzer = RetryAnalyzer.class)
     public void testRandomFlaky() {
-    	System.out.println(System.getProperty("log4j.configuration"));
-    	
-    	
-        double randomValue = Math.random(); // generates value between 0.0 and 1.0
+        double value = Math.random();
+        double threshold = 0.5;  // Adjusted for balanced PASS/FAIL outcomes
+        logger.info("Generated value: " + value + " | Threshold: " + threshold);
+        org.testng.Assert.assertTrue(value > threshold, "Value did not meet threshold");
+    }
 
-        // Log instead of just printing
-        logger.info("Generated value: " + randomValue);
-
-        Assert.assertTrue(randomValue > 0.5, "Flaky test failed: value <= 0.5");
+    @AfterMethod
+    public void logTestResult(ITestResult result) {
+        String status = result.isSuccess() ? "PASS" : "FAIL";
+        logger.info("Final Result | Test: " + result.getName() + " | Status: " + status);
     }
 }
