@@ -1,125 +1,159 @@
+#!/usr/bin/env python3
 import os
-import re
+import glob
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
-# ==========================
-# CONFIGURATION
-# ==========================
-LOG_DIR = "analysis/logs"        # Folder containing your log files
-OUTPUT_CSV = "analysis/output/retry_analysis.csv"
-OUTPUT_PLOTS_DIR = "analysis/output/plots"
+OUTPUT_DIR = "analysis/output"
+PLOTS_DIR = os.path.join(OUTPUT_DIR, "plots")
+JSON_GLOB = "analysis/logs/*.json"
+OUTPUT_CSV = os.path.join(OUTPUT_DIR, "retry_analysis.csv")
 
-# Ensure output directory exists
-os.makedirs(OUTPUT_PLOTS_DIR, exist_ok=True)
+os.makedirs(PLOTS_DIR, exist_ok=True)
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# ==========================
-# PARSING LOG FILES
-# ==========================
-all_logs = []
+# 1) Load JSON files
+json_files = sorted(glob.glob(JSON_GLOB))
+if not json_files:
+    print("No JSON log files found in analysis/logs/. Run convert_log_to_json.py first.")
+    raise SystemExit(1)
 
-# Regex to extract info from lines like:
-# 2025-08-23 08:18:00,466 INFO  com.retrythesis.tests.RetryAnalyzer - Retrying test 'testRandomFlaky' | Status: FAIL | Attempt: 1/2 | Duration: 23 ms
-log_pattern = re.compile(
-    r"Retrying test '(?P<test_name>.+?)' \| Status: (?P<status>PASS|FAIL) \| Attempt: (?P<attempt>\d+)/\d+ \| Duration: (?P<duration>[\d.]+) ms"
-)
+rows = []
+for jf in json_files:
+    with open(jf, "r") as fh:
+        try:
+            data = json.load(fh)
+        except Exception as e:
+            print(f"Error loading {jf}: {e}")
+            continue
+        if isinstance(data, list):
+            rows.extend(data)
+        elif isinstance(data, dict):
+            rows.append(data)
 
-for filename in os.listdir(LOG_DIR):
-    if filename.endswith(".log"):
-        filepath = os.path.join(LOG_DIR, filename)
-        with open(filepath, "r") as f:
-            for line in f:
-                match = log_pattern.search(line)
-                if match:
-                    all_logs.append({
-                        "test_name": match.group("test_name"),
-                        "status": match.group("status"),
-                        "retries": int(match.group("attempt")),
-                        "duration": float(match.group("duration"))
-                    })
+if not rows:
+    print("No parsed entries found in JSON files.")
+    raise SystemExit(1)
 
-if not all_logs:
-    print("No log data found.")
-    exit()
+df = pd.DataFrame(rows)
 
-# Convert to DataFrame
-df = pd.DataFrame(all_logs)
+# Normalize columns: test_name, status, retries, duration_ms, timestamp
+expected_cols = ["test_name", "status", "retries", "duration_ms", "timestamp"]
+for c in expected_cols:
+    if c not in df.columns:
+        df[c] = None
 
-# Save CSV
-df.to_csv(OUTPUT_CSV, index=False)
+# Coerce types
+df['retries'] = pd.to_numeric(df['retries'], errors='coerce').fillna(0).astype(int)
+df['duration_ms'] = pd.to_numeric(df['duration_ms'], errors='coerce').fillna(0.0)
+# parse timestamp if present
+if df['timestamp'].notnull().any():
+    df['timestamp_parsed'] = pd.to_datetime(df['timestamp'], errors='coerce')
+else:
+    df['timestamp_parsed'] = pd.NaT
+
+# Save CSV (full dataset)
+df_out = df[['test_name', 'status', 'retries', 'duration_ms', 'timestamp_parsed']].copy()
+df_out.rename(columns={'duration_ms': 'duration'}, inplace=True)
+df_out.to_csv(OUTPUT_CSV, index=False)
 print(f"✅ CSV saved to {OUTPUT_CSV}")
 
-# ==========================
-# FIGURE 1: Retry Distribution
-# ==========================
+# Print debug summary
+print("Status counts:\n", df['status'].value_counts())
+print("Retries distribution:\n", df['retries'].value_counts().sort_index())
+
+# -------------------------
+# FIGURE: Retry distribution
+# -------------------------
 plt.figure(figsize=(8,6))
 retry_counts = df['retries'].value_counts().sort_index()
-bars = plt.bar(retry_counts.index, retry_counts.values, color='skyblue')
+bars = plt.bar(retry_counts.index.astype(str), retry_counts.values)
 plt.title("Retry Distribution Across Tests")
 plt.xlabel("Number of Retries")
 plt.ylabel("Number of Tests")
-plt.xticks(rotation=0)
 for bar in bars:
-    plt.text(bar.get_x() + bar.get_width()/2, bar.get_height(), str(int(bar.get_height())),
-             ha='center', va='bottom')
+    plt.text(bar.get_x() + bar.get_width()/2, bar.get_height(), str(int(bar.get_height())), ha='center', va='bottom')
 plt.tight_layout()
-plt.savefig(os.path.join(OUTPUT_PLOTS_DIR, "retry_distribution.png"))
+plt.savefig(os.path.join(PLOTS_DIR, "retry_distribution.png"))
 plt.close()
 print("✅ Retry distribution plot saved.")
 
-# ==========================
-# FIGURE 2: Pass/Fail with Retries
-# ==========================
-plt.figure(figsize=(8,6))
-status_retry = df.groupby(['retries', 'status']).size().unstack(fill_value=0)
-bars = status_retry.plot(kind='bar', stacked=True, color=['lightgreen', 'salmon'], legend=True)
+# -------------------------
+# FIGURE: Status by retry (stacked)
+# -------------------------
+status_by_retry = df.groupby(['retries', 'status']).size().unstack(fill_value=0)
+ax = status_by_retry.plot(kind='bar', stacked=True, figsize=(8,6))
 plt.title("Test Status by Retry Count")
 plt.xlabel("Number of Retries")
 plt.ylabel("Number of Tests")
 plt.xticks(rotation=0)
-for i, row in enumerate(status_retry.values):
+# annotate
+for i, (idx, row) in enumerate(status_by_retry.iterrows()):
     bottom = 0
-    for val in row:
-        plt.text(i, bottom + val/2, str(val), ha='center', va='center', color='black', fontsize=9)
+    for status in status_by_retry.columns:
+        val = row[status]
+        if val > 0:
+            ax.text(i, bottom + val/2, int(val), ha='center', va='center', fontsize=9)
         bottom += val
+plt.legend(title="status")
 plt.tight_layout()
-plt.savefig(os.path.join(OUTPUT_PLOTS_DIR, "status_by_retry.png"))
+plt.savefig(os.path.join(PLOTS_DIR, "status_by_retry.png"))
 plt.close()
 print("✅ Status by retry plot saved.")
 
-# ==========================
-# FIGURE 3: Duration vs Retries
-# ==========================
+# -------------------------
+# FIGURE: Average duration vs retries
+# -------------------------
+avg_dur = df.groupby('retries')['duration_ms'].mean()
 plt.figure(figsize=(8,6))
-avg_duration = df.groupby('retries')['duration'].mean()
-plt.bar(avg_duration.index, avg_duration.values, color='orange')
+bars = plt.bar(avg_dur.index.astype(str), avg_dur.values)
 plt.title("Average Duration vs Retries")
 plt.xlabel("Retries")
 plt.ylabel("Average Duration (ms)")
-plt.xticks(rotation=0)
-for i, val in enumerate(avg_duration.values):
-    plt.text(avg_duration.index[i], val, f"{val:.3f}", ha='center', va='bottom')
+for bar in bars:
+    h = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2, h, f"{h:.2f}", ha='center', va='bottom', fontsize=9)
 plt.tight_layout()
-plt.savefig(os.path.join(OUTPUT_PLOTS_DIR, "duration_by_retry.png"))
+plt.savefig(os.path.join(PLOTS_DIR, "duration_by_retry.png"))
 plt.close()
 print("✅ Duration by retry plot saved.")
 
-# ==========================
-# FIGURE 4: Cumulative Pass Rate
-# ==========================
+# -------------------------
+# FIGURE: Duration scatter (each data point)
+# -------------------------
 plt.figure(figsize=(8,6))
-df_sorted = df.sort_values('retries')
-df_sorted['cumulative_pass'] = df_sorted['status'].eq('PASS').cumsum()
-df_sorted['cumulative_total'] = range(1, len(df_sorted)+1)
+plt.scatter(df['retries'], df['duration_ms'], s=30)
+plt.title("Test Duration by Retry Count")
+plt.xlabel("Retries")
+plt.ylabel("Duration (ms)")
+plt.tight_layout()
+plt.savefig(os.path.join(PLOTS_DIR, "duration_vs_retry.png"))
+plt.close()
+print("✅ Duration vs retry plot saved.")
+
+# -------------------------
+# FIGURE: Cumulative pass rate over time
+# -------------------------
+if df['timestamp_parsed'].notnull().any():
+    df_sorted = df.sort_values('timestamp_parsed').reset_index(drop=True)
+else:
+    df_sorted = df.reset_index(drop=True)
+
+df_sorted['cumulative_pass'] = (df_sorted['status'] == 'PASS').cumsum()
+df_sorted['cumulative_total'] = np.arange(1, len(df_sorted) + 1)
 df_sorted['cumulative_pass_rate'] = df_sorted['cumulative_pass'] / df_sorted['cumulative_total']
 
-plt.plot(df_sorted['retries'], df_sorted['cumulative_pass_rate'], marker='o', color='blue')
-plt.title("Cumulative Pass Rate by Retry")
-plt.xlabel("Retries")
+plt.figure(figsize=(8,6))
+x = df_sorted['timestamp_parsed'] if df_sorted['timestamp_parsed'].notnull().any() else df_sorted.index
+plt.plot(x, df_sorted['cumulative_pass_rate'], marker='o')
+plt.title("Cumulative Pass Rate over Runs")
+plt.xlabel("Run (timestamp or index)")
 plt.ylabel("Cumulative Pass Rate")
 plt.ylim(0,1)
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(os.path.join(OUTPUT_PLOTS_DIR, "cumulative_pass_rate.png"))
+plt.savefig(os.path.join(PLOTS_DIR, "cumulative_pass_rate.png"))
 plt.close()
 print("✅ Cumulative pass rate plot saved.")

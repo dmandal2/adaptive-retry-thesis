@@ -1,8 +1,7 @@
 version: "3.8"
 services:
   app:
-    build: .
+    build: .   # builds image from Dockerfile in current dir
     container_name: adaptive-retry-thesis-app
     volumes:
-      - ./logs:/usr/src/app/logs
-
+      - ./logs:/usr/src/app/logs   # maps host logs/ to container logs/

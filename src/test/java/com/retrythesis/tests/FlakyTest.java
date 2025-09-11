@@ -11,7 +11,16 @@ public class FlakyTest {
     @Test(retryAnalyzer = RetryAnalyzer.class)
     public void testRandomFlaky() {
         double value = Math.random();
-        double threshold = 0.5;  // Adjusted for balanced PASS/FAIL outcomes
+        // Default threshold
+        double threshold = 0.8;
+        String env = System.getenv("FLAKY_THRESHOLD");
+        if (env != null) {
+            try {
+                threshold = Double.parseDouble(env);
+            } catch (NumberFormatException e) {
+                logger.warn("FLAKY_THRESHOLD not a number: " + env + " — using default " + threshold);
+            }
+        }
         logger.info("Generated value: " + value + " | Threshold: " + threshold);
         org.testng.Assert.assertTrue(value > threshold, "Value did not meet threshold");
     }
