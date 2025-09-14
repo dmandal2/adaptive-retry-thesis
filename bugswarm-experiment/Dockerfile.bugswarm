@@ -1,0 +1,23 @@
+# Step 1: Base image
+FROM ubuntu:22.04
+
+# Step 2: Install dependencies
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip python3-venv \
+    openjdk-11-jdk maven git \
+    && apt-get clean
+
+# Step 3: Set working directory
+WORKDIR /app
+
+# Step 4: Copy BugSwarm dataset into container
+COPY dataset/bugswarm/ ./bugswarm/
+
+# Step 5: Upgrade pip (optional for Python scripts)
+RUN pip3 install --upgrade pip
+
+# Step 6: Create logs folder
+RUN mkdir logs
+
+# Step 7: Default command when container starts
+CMD ["/bin/bash"]
